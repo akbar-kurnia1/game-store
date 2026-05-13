@@ -1,84 +1,36 @@
-import {useState} from "react";
-export default function GameCard({ game, onFavoriteChange }) {
-    const [isFavorite, setIsFavorite] = useState(false);
-    const [rating, setRating] = useState(0);
-    const handleIncrease = () => {
-        if (rating < 5) {
-            setRating(rating + 1);
-        }
-    };
-    const handleDecrease = () => {
-        if (rating > 0) {
-            setRating(rating - 1);
-        }
-    }
-    const toggleFavorite = () => {
-      const newStatus = !isFavorite;
-      setIsFavorite(newStatus);
-      onFavoriteChange(newStatus);
-    };
-    return (
-        <div className="border-2 border-black bg-white flex flex-col items-center p-3 h-full">
-      <img 
-        src={game.cover} 
-        alt={game.name} 
-        className="w-full h-auto aspect-3/4 object-cover border border-black mb-3" 
-      />
-      <div className="flex flex-col items-center w-full text-center gap-1.5">
-      <h2 className="text-base font-bold line-clamp-2 min-h-12 flex items-center justify-center w-full">
-        {game.name}
+export default function GameCard({ game, onAction, actionText }) {
+  return (
+    <div className="bg-zinc-900 rounded-xl overflow-hidden border border-zinc-800 flex flex-col h-full hover:border-zinc-500 hover:-translate-y-1 transition group">
+      
+      <div className="overflow-hidden h-48 bg-zinc-950">
+        <img 
+          src={game.cover} 
+          alt={game.name} 
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+        />
+      </div>
+      
+      <div className="flex flex-col p-5 flex-grow">
+        <h2 className="text-base font-bold text-white line-clamp-2 leading-snug mb-1">
+          {game.name}
         </h2>
-        <p className="text-xs text-gray-700">{game.genre}</p>
-        <button 
-          onClick={toggleFavorite}
-          className="text-xl cursor-pointer"
-        >
-          {isFavorite ? '⭐' : '☆'}
-        </button>
-        <div className="flex items-center gap-1.5 mt-1 w-full justify-center relative">
+        <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-4">
+          {game.genre}
+        </p>
+        
+        <div className="flex items-center justify-between mt-auto pt-4 border-t border-zinc-800">
+          <span className="text-xs font-bold text-zinc-400 bg-zinc-950 border border-zinc-800 px-3 py-1 rounded-full">
+            FREE
+          </span>
           <button 
-            onClick={handleDecrease}
-            className="w-6 h-6 border-2 border-black bg-gray-200 font-bold hover:bg-gray-300 cursor-pointer flex items-center justify-center text-xs"
+            onClick={() => onAction(game)} 
+            className="px-5 py-2 bg-white text-zinc-950 text-sm font-bold rounded-lg hover:bg-zinc-200 transition cursor-pointer"
           >
-            -
+            {actionText}
           </button>
-          
-          <span className="text-sm font-bold w-4 text-center">{rating}</span>
-          
-          <button 
-            onClick={handleIncrease}
-            className="w-6 h-6 border-2 border-black bg-gray-200 font-bold hover:bg-gray-300 cursor-pointer flex items-center justify-center text-xs"
-          >
-            +
-          </button>
-
-        {rating === 1 && (
-          <span className="absolute right-0 font-bold text-red-600 text-xs">
-            Very Bad
-          </span>
-        )}
-        {rating === 2 && (
-          <span className="absolute right-0 font-bold text-orange-600 text-xs">
-            Bad
-          </span>
-        )}
-        {rating === 3 && (
-          <span className="absolute right-0 font-bold text-yellow-600 text-xs">
-            Not Bad
-          </span>
-        )}
-        {rating === 4 && (
-          <span className="absolute right-0 font-bold text-green-600 text-xs">
-            Good
-          </span>
-        )}
-        {rating === 5 && (
-          <span className="absolute right-0 font-bold text-purple-600 text-xs">
-            Masterpiece
-          </span>
-        )}
         </div>
       </div>
+
     </div>
   );
 }
