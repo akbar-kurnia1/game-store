@@ -10,9 +10,9 @@ export default function Store({ onGetGame }) {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        const response = await fetch("https://corsproxy.io/?https://www.freetogame.com/api/games");
+        const response = await fetch("https://api.codetabs.com/v1/proxy?quest=https://www.freetogame.com/api/games");
         const data = await response.json();
-        
+
         const formattedData = data.slice(0, 40).map(item => ({
           id: item.id,
           name: item.title,
