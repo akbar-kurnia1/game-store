@@ -1,1 +1,101 @@
 @import "tailwindcss";
+
+@theme {
+  --color-store-dark: #1a2332;
+  --color-store-card: #1e2a3a;
+  --color-store-border: #2a3a4e;
+  --color-store-hover: #2d4258;
+  --color-store-accent: #5b9ec9;
+  --color-store-accent-hover: #4a89b0;
+  --color-store-green: #5c8a3e;
+  --color-store-text: #c5d0dc;
+  --color-store-text-dim: #6b7f92;
+  --color-store-surface: #151c28;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #1a2332;
+  color: #c5d0dc;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #1a2332; }
+::-webkit-scrollbar-thumb { background: #2a3a4e; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #3a4a5e; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #1e2a3a 25%, #2a3a4e 50%, #1e2a3a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.btn-primary {
+  background-color: #5b9ec9;
+  color: white;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+.btn-primary:hover {
+  background-color: #4a89b0;
+}
+
+.badge-free {
+  background-color: #5c8a3e;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.genre-tag {
+  color: #5b9ec9;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+
+.scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 60px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  z-index: 10;
+}
+.scroll-arrow:hover { background: rgba(0, 0, 0, 0.8); }
+.scroll-arrow-left { left: 0; border-radius: 0 4px 4px 0; }
+.scroll-arrow-right { right: 0; border-radius: 4px 0 0 4px; }
