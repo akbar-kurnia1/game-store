@@ -1,25 +1,54 @@
+import { useState } from "react";
 import GameCard from "../components/GameCard";
+import GameModal from "../components/GameModal";
 
 export default function Library({ myGames }) {
+  const [selectedGame, setSelectedGame] = useState(null);
+
   if (myGames.length === 0) {
     return (
-      <div className="text-center mt-12 py-20 border border-dashed border-zinc-800 rounded-md">
-        <h2 className="text-xl font-bold text-white mb-2">Library Kosong</h2>
-        <p className="text-zinc-500 text-sm">Belum ada game yang ditambahkan dari Store.</p>
+      <div className="max-w-7xl mx-auto py-8">
+        <h2 className="text-lg font-semibold text-white mb-6">My Library</h2>
+        <div className="text-center py-20 border border-dashed border-store-border rounded-lg bg-store-card/30">
+          <div className="text-3xl mb-3">🎮</div>
+          <h3 className="text-base font-semibold text-white mb-1">Library Kosong</h3>
+          <p className="text-store-text-dim text-sm">
+            Belum ada game yang ditambahkan. Kunjungi Store untuk menemukan game.
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-      {myGames.map((gameItem) => (
-        <GameCard 
-          key={gameItem.id} 
-          game={gameItem} 
-          onAction={() => alert(`Memulai ${gameItem.name}...`)} 
-          actionText="PLAY" 
-        />
-      ))}
+    <div className="max-w-7xl mx-auto py-8 animate-fadeInUp">
+      <GameModal
+        game={selectedGame}
+        onClose={() => setSelectedGame(null)}
+        onGetGame={() => {}}
+        onWishlist={null}
+        isWishlisted={false}
+      />
+
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-lg font-semibold text-white">
+          My Library
+          <span className="text-store-text-dim text-sm font-normal ml-2">
+            ({myGames.length} game)
+          </span>
+        </h2>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        {myGames.map((gameItem) => (
+          <GameCard 
+            key={gameItem.id} 
+            game={gameItem} 
+            onAction={() => alert(`Memulai ${gameItem.name}...`)} 
+            actionText="PLAY"
+            onViewDetails={setSelectedGame}
+          />
+        ))}
+      </div>
     </div>
   );
 }
