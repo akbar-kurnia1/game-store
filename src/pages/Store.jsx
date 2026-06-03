@@ -21,6 +21,8 @@ export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
 
   const featuredRef = useRef(null);
 
+  const [heroImages, setHeroImages] = useState({});
+
   useEffect(() => {
     const fetchGames = async () => {
       try {
@@ -40,6 +42,27 @@ export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
         }));
 
         setGames(formattedData);
+
+        const hdSlice = data.slice(0, 12);
+        const detailPromises = hdSlice.map((item) =>
+          fetch(`${API_BASE}/game?id=${item.id}`)
+            .then((res) => res.json())
+            .then((detail) => ({
+              id: item.id,
+              image:
+                detail.screenshots && detail.screenshots.length > 0
+                  ? detail.screenshots[0].image
+                  : item.thumbnail,
+            }))
+            .catch(() => ({ id: item.id, image: item.thumbnail }))
+        );
+
+        const hdDetails = await Promise.all(detailPromises);
+        const imageMap = {};
+        hdDetails.forEach((h) => {
+          imageMap[h.id] = h.image;
+        });
+        setHeroImages(imageMap);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -209,7 +232,7 @@ export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
       {currentHero && (
         <div className="relative h-72 md:h-96 rounded-lg overflow-hidden animate-fadeInUp">
           <img
-            src={currentHero.cover}
+            src={heroImages[currentHero.id] || currentHero.cover}
             alt={currentHero.name}
             loading="lazy"
             className="w-full h-full object-cover"
@@ -272,7 +295,7 @@ export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
                   className="w-4/5 md:w-3/5 lg:w-1/2 snap-center shrink-0 relative h-56 md:h-72 rounded-lg overflow-hidden border border-store-border group"
                 >
                   <img
-                    src={game.cover}
+                    src={heroImages[game.id] || game.cover}
                     alt={game.name}
                     loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
