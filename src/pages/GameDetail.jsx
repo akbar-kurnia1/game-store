@@ -1,31 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useParams, Link } from "react-router-dom";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
+import useGameDetail from "../hooks/useGameDetail";
 
 export default function GameDetail({ onGetGame, onToggleWishlist, wishlist, library }) {
   const { id } = useParams();
-  const [gameData, setGameData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { gameData, loading, error } = useGameDetail(id);
   const screenshotRef = useRef(null);
-
-  useEffect(() => {
-    const fetchDetail = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(`${API_BASE}/game?id=${id}`);
-        const data = await response.json();
-        setGameData(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDetail();
-  }, [id]);
 
   const isWishlisted = wishlist.some((item) => item.id === Number(id));
   const isInLibrary = library.some((item) => item.id === Number(id));
@@ -112,11 +92,10 @@ export default function GameDetail({ onGetGame, onToggleWishlist, wishlist, libr
           </button>
           <button
             onClick={() => onToggleWishlist(gameForAction)}
-            className={`text-sm px-4 py-2.5 rounded border cursor-pointer transition-colors ${
-              isWishlisted
+            className={`text-sm px-4 py-2.5 rounded border cursor-pointer transition-colors ${isWishlisted
                 ? "border-store-accent text-store-accent"
                 : "border-store-border text-store-text-dim hover:text-white"
-            }`}
+              }`}
           >
             {isWishlisted ? "★ Wishlisted" : "☆ Wishlist"}
           </button>
