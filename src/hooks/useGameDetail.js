@@ -12,7 +12,17 @@ export default function useGameDetail(id) {
       setLoading(true);
       try {
         const response = await fetch(`${API_BASE}/game?id=${id}`);
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status} ${response.statusText}`);
+        }
+
         const data = await response.json();
+
+        if (!data || !data.id) {
+          throw new Error("Detail game tidak ditemukan.");
+        }
+
         setGameData(data);
       } catch (err) {
         setError(err.message);

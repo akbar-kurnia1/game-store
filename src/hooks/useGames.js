@@ -20,7 +20,16 @@ export default function useGames() {
     const fetchGames = async () => {
       try {
         const response = await fetch(`${API_BASE}/games`);
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status} ${response.statusText}`);
+        }
+
         const data = await response.json();
+
+        if (!Array.isArray(data)) {
+          throw new Error("Data game tidak tersedia. Silakan coba lagi nanti.");
+        }
 
         const formattedData = data.map((item) => ({
           id: item.id,
