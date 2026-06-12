@@ -1,16 +1,60 @@
-# React + Vite
+# FreeStation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Website katalog game free-to-play yang mengambil data dari [FreeToGame API](https://www.freetogame.com/api-doc). Dibuat menggunakan React + Vite.
 
-Currently, two official plugins are available:
+## Fitur
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Hero Slider** — Menampilkan game unggulan secara bergantian di halaman utama.
+- **Browse & Filter** — Jelajahi katalog game dan filter berdasarkan genre.
+- **Pencarian** — Cari game berdasarkan judul.
+- **Detail Game** — Lihat informasi lengkap setiap game (screenshot, deskripsi, spesifikasi, dsb).
+- **Wishlist** — Simpan game yang diminati ke daftar wishlist.
+- **Library** — Tambahkan game ke koleksi pribadi.
+- **Community Hub** — Halaman komunitas.
+- **Pagination** — Navigasi halaman untuk katalog game.
+- **Responsive** — Tampilan menyesuaikan ukuran layar (mobile & desktop).
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- [React 19](https://react.dev/) — UI Library
+- [Vite 8](https://vite.dev/) — Build tool & dev server
+- [Tailwind CSS 4](https://tailwindcss.com/) — Styling
+- [React Router 7](https://reactrouter.com/) — Client-side routing
+- [FreeToGame API](https://www.freetogame.com/api-doc) — Sumber data game
 
-## Expanding the ESLint configuration
+## Struktur Folder
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```
+src/
+├── components/
+├── hooks/
+├── pages/
+├── assets/
+├── App.jsx
+└── main.jsx
+```
+
+## Cara Menjalankan
+
+1. Clone repository:
+   ```bash
+   git clone https://github.com/akbar-kurnia1/game-store.git
+   cd game-store
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Buat file `.env` berdasarkan `.env.example`:
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Jalankan development server:
+   ```bash
+   npm run dev
+   ```
+
+5. Buka `http://localhost:5173` di browser.
