@@ -95,7 +95,7 @@ export default function Community() {
   return (
     <div className="max-w-3xl mx-auto py-8 animate-fadeInUp">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-white">Community Hub</h2>
+        <h2 className="text-lg font-semibold text-store-heading">Community Hub</h2>
         <button
           onClick={() => setShowForm(!showForm)}
           className="btn-primary text-sm px-4 py-2"
@@ -106,28 +106,28 @@ export default function Community() {
 
       {showForm && (
         <form onSubmit={handleCreatePost} className="bg-store-card border border-store-border rounded-lg p-5 mb-6">
-          <h3 className="text-white font-semibold mb-4">Buat Diskusi Baru</h3>
+          <h3 className="text-store-heading font-semibold mb-4">Buat Diskusi Baru</h3>
           <div className="flex flex-col gap-3">
             <input
               type="text"
               placeholder="Nama kamu"
               value={newPost.author}
               onChange={(e) => setNewPost({ ...newPost, author: e.target.value })}
-              className="bg-store-dark border border-store-border rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-store-accent placeholder-store-text-dim"
+              className="bg-store-dark border border-store-border rounded px-3 py-2 text-sm text-store-heading focus:outline-none focus:border-store-accent placeholder-store-text-dim"
             />
             <input
               type="text"
               placeholder="Judul diskusi"
               value={newPost.title}
               onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
-              className="bg-store-dark border border-store-border rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-store-accent placeholder-store-text-dim"
+              className="bg-store-dark border border-store-border rounded px-3 py-2 text-sm text-store-heading focus:outline-none focus:border-store-accent placeholder-store-text-dim"
             />
             <textarea
               placeholder="Tulis isi diskusi..."
               value={newPost.content}
               onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
               rows={4}
-              className="bg-store-dark border border-store-border rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-store-accent placeholder-store-text-dim resize-none"
+              className="bg-store-dark border border-store-border rounded px-3 py-2 text-sm text-store-heading focus:outline-none focus:border-store-accent placeholder-store-text-dim resize-none"
             />
             <button type="submit" className="btn-primary text-sm w-fit">
               Posting
@@ -143,18 +143,18 @@ export default function Community() {
               <div className="w-7 h-7 rounded-full bg-store-hover flex items-center justify-center text-xs font-bold text-white">
                 {post.author.charAt(0).toUpperCase()}
               </div>
-              <span className="text-sm font-semibold text-white">{post.author}</span>
+              <span className="text-sm font-semibold text-store-heading">{post.author}</span>
               <span className="text-xs text-store-text-dim">• {formatTime(post.timestamp)}</span>
             </div>
 
-            <h3 className="text-white font-semibold mb-1">{post.title}</h3>
+            <h3 className="text-store-heading font-semibold mb-1">{post.title}</h3>
             <p className="text-store-text text-sm leading-relaxed mb-4">{post.content}</p>
 
             <div className="flex items-center gap-4 text-sm border-t border-store-border pt-3">
               <button
                 onClick={() => handleLike(post.id)}
                 className={`flex items-center gap-1 cursor-pointer transition-colors ${
-                  post.likedByUser ? "text-store-accent" : "text-store-text-dim hover:text-white"
+                  post.likedByUser ? "text-store-accent" : "text-store-text-dim hover:text-store-heading"
                 }`}
               >
                 {post.likedByUser ? "▲" : "△"} {post.likes}
@@ -169,7 +169,7 @@ export default function Community() {
                 {post.comments.map((comment) => (
                   <div key={comment.id}>
                     <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-xs font-semibold text-white">{comment.author}</span>
+                      <span className="text-xs font-semibold text-store-heading">{comment.author}</span>
                       <span className="text-xs text-store-text-dim">• {formatTime(comment.timestamp)}</span>
                     </div>
                     <p className="text-sm text-store-text">{comment.text}</p>
@@ -185,7 +185,7 @@ export default function Community() {
                   placeholder="Nama kamu (untuk komentar)"
                   value={commentAuthor}
                   onChange={(e) => setCommentAuthor(e.target.value)}
-                  className="bg-store-dark border border-store-border rounded px-3 py-1.5 text-xs text-white focus:outline-none placeholder-store-text-dim"
+                  className="bg-store-dark border border-store-border rounded px-3 py-1.5 text-xs text-store-heading focus:outline-none placeholder-store-text-dim"
                 />
               )}
               <div className="flex gap-2">
@@ -199,11 +199,11 @@ export default function Community() {
                   onKeyDown={(e) => {
                     if (e.key === "Enter") handleAddComment(post.id);
                   }}
-                  className="flex-grow bg-store-dark border border-store-border rounded px-3 py-1.5 text-xs text-white focus:outline-none placeholder-store-text-dim"
+                  className="flex-grow bg-store-dark border border-store-border rounded px-3 py-1.5 text-xs text-store-heading focus:outline-none placeholder-store-text-dim"
                 />
                 <button
                   onClick={() => handleAddComment(post.id)}
-                  className="bg-store-card border border-store-border px-3 py-1.5 rounded text-xs text-store-text-dim hover:text-white cursor-pointer"
+                  className="bg-store-card border border-store-border px-3 py-1.5 rounded text-xs text-store-text-dim hover:text-store-heading cursor-pointer"
                 >
                   Kirim
                 </button>
