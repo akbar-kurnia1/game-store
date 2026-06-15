@@ -2,10 +2,12 @@ import { useState, useRef } from "react";
 import GameCard from "../components/GameCard";
 import GameModal from "../components/GameModal";
 import useGames from "../hooks/useGames";
+import { useLibraryContext } from "../contexts/LibraryContext";
 
-export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
+export default function Store() {
   const [selectedGame, setSelectedGame] = useState(null);
   const featuredRef = useRef(null);
+  const { handleAddToLibrary, handleToggleWishlist, isInWishlist } = useLibraryContext();
 
   const {
     loading,
@@ -27,10 +29,6 @@ export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
     filteredCatalog,
     getPageNumbers,
   } = useGames();
-
-  const isInWishlist = (gameId) => {
-    return wishlist.some((item) => item.id === gameId);
-  };
 
   const scrollFeatured = (direction) => {
     if (!featuredRef.current) return;
@@ -69,12 +67,9 @@ export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
         <GameModal
           game={selectedGame}
           onClose={() => setSelectedGame(null)}
-          onGetGame={onGetGame}
-          onWishlist={onToggleWishlist}
-          isWishlisted={selectedGame ? isInWishlist(selectedGame.id) : false}
         />
         <div className="mb-6">
-          <h2 className="text-lg font-semibold text-white">
+          <h2 className="text-lg font-semibold text-store-heading">
             Hasil pencarian "{searchQuery}"
           </h2>
           <p className="text-store-text-dim text-sm mt-1">
@@ -88,10 +83,8 @@ export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
               <GameCard
                 key={gameItem.id}
                 game={gameItem}
-                onAction={onGetGame}
+                onAction={handleAddToLibrary}
                 actionText="GET"
-                onWishlist={onToggleWishlist}
-                isWishlisted={isInWishlist(gameItem.id)}
                 onViewDetails={setSelectedGame}
               />
             ))
@@ -120,9 +113,6 @@ export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
       <GameModal
         game={selectedGame}
         onClose={() => setSelectedGame(null)}
-        onGetGame={onGetGame}
-        onWishlist={onToggleWishlist}
-        isWishlisted={selectedGame ? isInWishlist(selectedGame.id) : false}
       />
 
       {currentHero && (
@@ -133,8 +123,8 @@ export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
             loading="lazy"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-store-dark via-store-dark/60 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-store-dark via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
 
           <div className="absolute bottom-0 left-0 p-6 md:p-8 max-w-md">
             <span className="genre-tag mb-2 inline-block">{currentHero.genre}</span>
@@ -143,7 +133,7 @@ export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
             </h1>
             <div className="flex items-center gap-3">
               <span className="badge-free">Free to Play</span>
-              <button onClick={() => onGetGame(currentHero)} className="btn-primary text-sm px-6 py-2">
+              <button onClick={() => handleAddToLibrary(currentHero)} className="btn-primary text-sm px-6 py-2">
                 Add to Library
               </button>
             </div>
@@ -177,7 +167,7 @@ export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
 
       {featuredGames.length > 0 && (
         <div className="animate-fadeInUp">
-          <h2 className="text-base font-semibold text-white mb-4">Featured & Recommended</h2>
+          <h2 className="text-base font-semibold text-store-heading mb-4">Featured & Recommended</h2>
           <div className="relative">
             <button onClick={() => scrollFeatured("left")} className="scroll-arrow scroll-arrow-left">
               ‹
@@ -195,12 +185,12 @@ export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
                     loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-store-dark via-store-dark/20 to-transparent flex flex-col justify-end p-5">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-5">
                     <span className="genre-tag mb-1">{game.genre}</span>
                     <h3 className="text-white text-lg font-bold mb-2">{game.name}</h3>
                     <div className="flex items-center gap-2">
                       <span className="badge-free">Free</span>
-                      <button onClick={() => onGetGame(game)} className="btn-primary text-xs px-4 py-1.5">
+                      <button onClick={() => handleAddToLibrary(game)} className="btn-primary text-xs px-4 py-1.5">
                         Add to Library
                       </button>
                     </div>
@@ -218,7 +208,7 @@ export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
 
       <div className="mb-10 animate-fadeInUp">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-5 gap-3">
-          <h2 className="text-base font-semibold text-white">Browse Games</h2>
+          <h2 className="text-base font-semibold text-store-heading">Browse Games</h2>
           <div className="flex gap-2 overflow-x-auto pb-1 hide-scrollbar">
             {uniqueGenres.map((genre) => (
               <button
@@ -226,7 +216,7 @@ export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
                 onClick={() => setActiveGenre(genre)}
                 className={`px-3 py-1 rounded text-xs font-semibold whitespace-nowrap transition-all border cursor-pointer ${activeGenre === genre
                     ? "bg-store-accent text-white border-store-accent"
-                    : "bg-store-card text-store-text-dim border-store-border hover:border-store-text-dim hover:text-white"
+                    : "bg-store-card text-store-text-dim border-store-border hover:border-store-text-dim hover:text-store-heading"
                   }`}
               >
                 {genre}
@@ -241,10 +231,8 @@ export default function Store({ onGetGame, onToggleWishlist, wishlist }) {
               <GameCard
                 key={gameItem.id}
                 game={gameItem}
-                onAction={onGetGame}
+                onAction={handleAddToLibrary}
                 actionText="GET"
-                onWishlist={onToggleWishlist}
-                isWishlisted={isInWishlist(gameItem.id)}
                 onViewDetails={setSelectedGame}
               />
             ))
@@ -274,7 +262,7 @@ function PaginationBar({ currentPage, totalPages, pageNumbers, onPageChange }) {
       <button
         onClick={() => onPageChange(Math.max(1, currentPage - 1))}
         disabled={currentPage === 1}
-        className="px-3 py-1.5 text-sm rounded bg-store-card border border-store-border text-store-text-dim hover:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
+        className="px-3 py-1.5 text-sm rounded bg-store-card border border-store-border text-store-text-dim hover:text-store-heading disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
       >
         ‹ Prev
       </button>
@@ -290,7 +278,7 @@ function PaginationBar({ currentPage, totalPages, pageNumbers, onPageChange }) {
             onClick={() => onPageChange(page)}
             className={`px-3 py-1.5 text-sm rounded border cursor-pointer ${currentPage === page
                 ? "bg-store-accent text-white border-store-accent"
-                : "bg-store-card border-store-border text-store-text-dim hover:text-white"
+                : "bg-store-card border-store-border text-store-text-dim hover:text-store-heading"
               }`}
           >
             {page}
@@ -301,7 +289,7 @@ function PaginationBar({ currentPage, totalPages, pageNumbers, onPageChange }) {
       <button
         onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
         disabled={currentPage === totalPages}
-        className="px-3 py-1.5 text-sm rounded bg-store-card border border-store-border text-store-text-dim hover:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
+        className="px-3 py-1.5 text-sm rounded bg-store-card border border-store-border text-store-text-dim hover:text-store-heading disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
       >
         Next ›
       </button>
