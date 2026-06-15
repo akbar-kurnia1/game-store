@@ -1,14 +1,16 @@
 import { useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import useGameDetail from "../hooks/useGameDetail";
+import { useLibraryContext } from "../contexts/LibraryContext";
 
-export default function GameDetail({ onGetGame, onToggleWishlist, wishlist, library }) {
+export default function GameDetail() {
   const { id } = useParams();
   const { gameData, loading, error } = useGameDetail(id);
   const screenshotRef = useRef(null);
+  const { handleAddToLibrary, handleToggleWishlist, isInWishlist, isInLibrary, handleRemoveFromLibrary } = useLibraryContext();
 
-  const isWishlisted = wishlist.some((item) => item.id === Number(id));
-  const isInLibrary = library.some((item) => item.id === Number(id));
+  const isWishlisted = isInWishlist(Number(id));
+  const inLibrary = isInLibrary(Number(id));
 
   const scrollScreenshots = (direction) => {
     if (!screenshotRef.current) return;
@@ -57,7 +59,7 @@ export default function GameDetail({ onGetGame, onToggleWishlist, wishlist, libr
 
   return (
     <div className="max-w-5xl mx-auto py-6 animate-fadeInUp">
-      <Link to="/" className="text-store-text-dim text-sm hover:text-white mb-4 inline-block">
+      <Link to="/" className="text-store-text-dim text-sm hover:text-store-heading mb-4 inline-block">
         ← Kembali ke Store
       </Link>
 
@@ -72,7 +74,7 @@ export default function GameDetail({ onGetGame, onToggleWishlist, wishlist, libr
 
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">{gameData.title}</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-store-heading mb-2">{gameData.title}</h1>
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <span className="badge-free">Free to Play</span>
             <span className="genre-tag">{gameData.genre}</span>
@@ -83,52 +85,63 @@ export default function GameDetail({ onGetGame, onToggleWishlist, wishlist, libr
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={() => onGetGame(gameForAction)}
-            className="btn-primary text-sm px-6 py-2.5"
-            disabled={isInLibrary}
-          >
-            {isInLibrary ? "✓ Di Library" : "Add to Library"}
-          </button>
-          <button
-            onClick={() => onToggleWishlist(gameForAction)}
-            className={`text-sm px-4 py-2.5 rounded border cursor-pointer transition-colors ${isWishlisted
-                ? "border-store-accent text-store-accent"
-                : "border-store-border text-store-text-dim hover:text-white"
-              }`}
-          >
-            {isWishlisted ? "★ Wishlisted" : "☆ Wishlist"}
-          </button>
+          {inLibrary ? (
+            <button
+              onClick={() => handleRemoveFromLibrary(Number(id))}
+              className="bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500/30 font-semibold text-sm px-6 py-2.5 rounded transition-colors cursor-pointer"
+            >
+              Remove from Library
+            </button>
+          ) : (
+            <button
+              onClick={() => handleAddToLibrary(gameForAction)}
+              className="btn-primary text-sm px-6 py-2.5"
+            >
+              Add to Library
+            </button>
+          )}
+
+          {!inLibrary && (
+            <button
+              onClick={() => handleToggleWishlist(gameForAction)}
+              className={`text-sm px-4 py-2.5 rounded border cursor-pointer transition-colors ${isWishlisted
+                  ? "border-store-accent text-store-accent"
+                  : "border-store-border text-store-text-dim hover:text-store-heading"
+                }`}
+            >
+              {isWishlisted ? "★ Wishlisted" : "☆ Wishlist"}
+            </button>
+          )}
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="md:col-span-2">
-          <h2 className="text-base font-semibold text-white mb-3">About This Game</h2>
+          <h2 className="text-base font-semibold text-store-heading mb-3">About This Game</h2>
           <p className="text-store-text text-sm leading-relaxed whitespace-pre-line">
             {gameData.description || gameData.short_description}
           </p>
         </div>
 
         <div className="bg-store-card border border-store-border rounded-lg p-4">
-          <h3 className="text-sm font-semibold text-white mb-3">Game Info</h3>
+          <h3 className="text-sm font-semibold text-store-heading mb-3">Game Info</h3>
           <div className="flex flex-col gap-3 text-sm">
             <div>
               <span className="text-store-text-dim block text-xs">Developer</span>
-              <span className="text-white">{gameData.developer}</span>
+              <span className="text-store-heading">{gameData.developer}</span>
             </div>
             <div>
               <span className="text-store-text-dim block text-xs">Publisher</span>
-              <span className="text-white">{gameData.publisher}</span>
+              <span className="text-store-heading">{gameData.publisher}</span>
             </div>
             <div>
               <span className="text-store-text-dim block text-xs">Release Date</span>
-              <span className="text-white">{gameData.release_date}</span>
+              <span className="text-store-heading">{gameData.release_date}</span>
             </div>
             {gameData.status && (
               <div>
                 <span className="text-store-text-dim block text-xs">Status</span>
-                <span className="text-white">{gameData.status}</span>
+                <span className="text-store-heading">{gameData.status}</span>
               </div>
             )}
             {gameData.game_url && (
@@ -147,7 +160,7 @@ export default function GameDetail({ onGetGame, onToggleWishlist, wishlist, libr
 
       {gameData.screenshots && gameData.screenshots.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-base font-semibold text-white mb-3">Screenshots</h2>
+          <h2 className="text-base font-semibold text-store-heading mb-3">Screenshots</h2>
           <div className="relative">
             <button
               onClick={() => scrollScreenshots("left")}
@@ -181,37 +194,37 @@ export default function GameDetail({ onGetGame, onToggleWishlist, wishlist, libr
 
       {sysReq && (
         <div className="mb-8">
-          <h2 className="text-base font-semibold text-white mb-3">Minimum System Requirements</h2>
+          <h2 className="text-base font-semibold text-store-heading mb-3">Minimum System Requirements</h2>
           <div className="bg-store-card border border-store-border rounded-lg p-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               {sysReq.os && (
                 <div>
                   <span className="text-store-text-dim block text-xs">OS</span>
-                  <span className="text-white">{sysReq.os}</span>
+                  <span className="text-store-heading">{sysReq.os}</span>
                 </div>
               )}
               {sysReq.processor && (
                 <div>
                   <span className="text-store-text-dim block text-xs">Processor</span>
-                  <span className="text-white">{sysReq.processor}</span>
+                  <span className="text-store-heading">{sysReq.processor}</span>
                 </div>
               )}
               {sysReq.memory && (
                 <div>
                   <span className="text-store-text-dim block text-xs">Memory</span>
-                  <span className="text-white">{sysReq.memory}</span>
+                  <span className="text-store-heading">{sysReq.memory}</span>
                 </div>
               )}
               {sysReq.graphics && (
                 <div>
                   <span className="text-store-text-dim block text-xs">Graphics</span>
-                  <span className="text-white">{sysReq.graphics}</span>
+                  <span className="text-store-heading">{sysReq.graphics}</span>
                 </div>
               )}
               {sysReq.storage && (
                 <div>
                   <span className="text-store-text-dim block text-xs">Storage</span>
-                  <span className="text-white">{sysReq.storage}</span>
+                  <span className="text-store-heading">{sysReq.storage}</span>
                 </div>
               )}
             </div>
