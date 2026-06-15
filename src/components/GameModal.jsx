@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom";
+import { useLibraryContext } from "../contexts/LibraryContext";
 
-export default function GameModal({ game, onClose, onGetGame, onWishlist, isWishlisted }) {
+export default function GameModal({ game, onClose }) {
+  const { handleAddToLibrary, handleToggleWishlist, isInWishlist, isInLibrary, handleRemoveFromLibrary } = useLibraryContext();
+
   if (!game) return null;
+
+  const wishlisted = isInWishlist(game.id);
+  const inLibrary = isInLibrary(game.id);
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -32,7 +38,7 @@ export default function GameModal({ game, onClose, onGetGame, onWishlist, isWish
         </div>
 
         <div className="p-5 md:p-6">
-          <h2 className="text-xl font-bold text-white mb-2">{game.name}</h2>
+          <h2 className="text-xl font-bold text-store-heading mb-2">{game.name}</h2>
 
           {game.shortDescription && (
             <p className="text-store-text text-sm leading-relaxed mb-4">
@@ -44,55 +50,64 @@ export default function GameModal({ game, onClose, onGetGame, onWishlist, isWish
             {game.developer && (
               <div>
                 <span className="text-store-text-dim">Developer</span>
-                <p className="text-white">{game.developer}</p>
+                <p className="text-store-heading">{game.developer}</p>
               </div>
             )}
             {game.publisher && (
               <div>
                 <span className="text-store-text-dim">Publisher</span>
-                <p className="text-white">{game.publisher}</p>
+                <p className="text-store-heading">{game.publisher}</p>
               </div>
             )}
             {game.platform && (
               <div>
                 <span className="text-store-text-dim">Platform</span>
-                <p className="text-white">{game.platform}</p>
+                <p className="text-store-heading">{game.platform}</p>
               </div>
             )}
             {game.releaseDate && (
               <div>
                 <span className="text-store-text-dim">Release Date</span>
-                <p className="text-white">{game.releaseDate}</p>
+                <p className="text-store-heading">{game.releaseDate}</p>
               </div>
             )}
           </div>
 
           <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-store-border">
-            <button
-              onClick={() => { onGetGame(game); onClose(); }}
-              className="btn-primary text-sm px-5 py-2"
-            >
-              Add to Library
-            </button>
+            {inLibrary ? (
+              <button
+                onClick={() => { handleRemoveFromLibrary(game.id); onClose(); }}
+                className="bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500/30 font-semibold text-sm px-5 py-2 rounded transition-colors cursor-pointer"
+              >
+                Remove from Library
+              </button>
+            ) : (
+              <button
+                onClick={() => { handleAddToLibrary(game); onClose(); }}
+                className="btn-primary text-sm px-5 py-2"
+              >
+                Add to Library
+              </button>
+            )}
 
             <Link
               to={`/game/${game.id}`}
               onClick={onClose}
-              className="text-sm px-5 py-2 rounded bg-store-hover text-white hover:bg-store-border transition-colors"
+              className="text-sm px-5 py-2 rounded bg-store-hover text-store-heading hover:bg-store-border transition-colors"
             >
               Lihat Detail Lengkap →
             </Link>
 
-            {onWishlist && (
+            {!inLibrary && (
               <button
-                onClick={() => onWishlist(game)}
+                onClick={() => handleToggleWishlist(game)}
                 className={`text-sm px-4 py-2 rounded border cursor-pointer transition-colors ${
-                  isWishlisted
+                  wishlisted
                     ? "border-store-accent text-store-accent"
-                    : "border-store-border text-store-text-dim hover:text-white"
+                    : "border-store-border text-store-text-dim hover:text-store-heading"
                 }`}
               >
-                {isWishlisted ? "★ Wishlisted" : "☆ Wishlist"}
+                {wishlisted ? "★ Wishlisted" : "☆ Wishlist"}
               </button>
             )}
           </div>
