@@ -5,56 +5,18 @@ import Library from "./pages/Library";
 import Wishlist from "./pages/Wishlist";
 import Community from "./pages/Community";
 import GameDetail from "./pages/GameDetail";
-import useLibrary from "./hooks/useLibrary";
 
 export default function App() {
-  const {
-    myLibrary,
-    myWishlist,
-    handleAddToLibrary,
-    handleToggleWishlist,
-    isInWishlist,
-    isInLibrary,
-  } = useLibrary();
-
   return (
     <div className="bg-store-dark min-h-screen text-store-text flex flex-col">
-      <Navbar libraryCount={myLibrary.length} wishlistCount={myWishlist.length} />
+      <Navbar />
 
       <main className="px-4 md:px-8 flex-grow py-6">
         <Routes>
-          <Route
-            path="/"
-            element={
-              <Store
-                onGetGame={handleAddToLibrary}
-                onToggleWishlist={handleToggleWishlist}
-                wishlist={myWishlist}
-              />
-            }
-          />
-          <Route
-            path="/game/:id"
-            element={
-              <GameDetail
-                onGetGame={handleAddToLibrary}
-                onToggleWishlist={handleToggleWishlist}
-                wishlist={myWishlist}
-                library={myLibrary}
-              />
-            }
-          />
-          <Route path="/library" element={<Library myGames={myLibrary} />} />
-          <Route
-            path="/wishlist"
-            element={
-              <Wishlist
-                myWishlist={myWishlist}
-                onToggleWishlist={handleToggleWishlist}
-                onGetGame={handleAddToLibrary}
-              />
-            }
-          />
+          <Route path="/" element={<Store />} />
+          <Route path="/game/:id" element={<GameDetail />} />
+          <Route path="/library" element={<Library />} />
+          <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/community" element={<Community />} />
         </Routes>
       </main>
@@ -64,7 +26,7 @@ export default function App() {
           <div className="flex flex-col md:flex-row justify-between items-start gap-6">
 
             <div className="flex flex-col gap-2">
-              <span className="font-extrabold text-lg text-white tracking-tight">FREESTATION</span>
+              <span className="font-extrabold text-lg text-store-heading tracking-tight">FREESTATION</span>
               <p className="text-store-text-dim text-sm max-w-xs">
                 Your straightforward destination for discovering the best free-to-play games.
               </p>
