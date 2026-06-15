@@ -11,18 +11,45 @@
   --color-store-text: #c5d0dc;
   --color-store-text-dim: #6b7f92;
   --color-store-surface: #151c28;
+  --color-store-heading: #ffffff;
+}
+
+[data-theme="light"] {
+  --color-store-dark: #e8ecf1;
+  --color-store-card: #ffffff;
+  --color-store-border: #d0d7de;
+  --color-store-hover: #dce3ea;
+  --color-store-accent: #3a7cb8;
+  --color-store-accent-hover: #2d6a9f;
+  --color-store-green: #4a7a2e;
+  --color-store-text: #2c3e50;
+  --color-store-text-dim: #5a6d7e;
+  --color-store-surface: #f5f7fa;
+  --color-store-heading: #1e293b;
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #1a2332;
-  color: #c5d0dc;
+  background-color: var(--color-store-dark, #1a2332);
+  color: var(--color-store-text, #c5d0dc);
 }
 
 ::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: #1a2332; }
-::-webkit-scrollbar-thumb { background: #2a3a4e; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #3a4a5e; }
+::-webkit-scrollbar-track { background: var(--color-store-dark); }
+::-webkit-scrollbar-thumb { background: var(--color-store-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-store-hover); }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 9999;
+}
 
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(15px); }
@@ -39,13 +66,13 @@ body {
 }
 
 .skeleton-shimmer {
-  background: linear-gradient(90deg, #1e2a3a 25%, #2a3a4e 50%, #1e2a3a 75%);
+  background: linear-gradient(90deg, var(--color-store-card) 25%, var(--color-store-border) 50%, var(--color-store-card) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
 
 .btn-primary {
-  background-color: #5b9ec9;
+  background-color: var(--color-store-accent);
   color: white;
   font-weight: 600;
   padding: 8px 20px;
@@ -55,11 +82,15 @@ body {
   border: none;
 }
 .btn-primary:hover {
-  background-color: #4a89b0;
+  background-color: var(--color-store-accent-hover);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .badge-free {
-  background-color: #5c8a3e;
+  background-color: var(--color-store-green);
   color: white;
   font-size: 11px;
   font-weight: 600;
@@ -69,7 +100,7 @@ body {
 }
 
 .genre-tag {
-  color: #5b9ec9;
+  color: var(--color-store-accent);
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
